@@ -1,12 +1,42 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uber_mobile/core/models/session.dart';
 import 'package:uber_mobile/ui/widgets/primaryButton.dart';
 import 'package:uber_mobile/utils/colors.dart';
+import 'package:uber_mobile/utils/typography.dart';
 
-class SignIn extends StatelessWidget {
+final googleSiginProvider = FutureProvider<String?>((ref) async {
+  // Trigger the authentication flow
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+  // Obtain the auth details from the request
+  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+  // Create a new credential
+  final credential = GoogleAuthProvider.credential(
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
+  );
+
+  // Once signed in, return the UserCredential
+  final user = await FirebaseAuth.instance.signInWithCredential(credential);
+
+  return user.credential?.accessToken;
+});
+
+final siginProvider = FutureProvider<Session?>((ref) async {
+  final googleSigin = ref.read(googleSiginProvider);
+
+  return Session(false);
+});
+
+class SignIn extends ConsumerWidget {
   const SignIn({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef widgetRef) {
     return Scaffold(
       backgroundColor: UberColors.bgColor,
       body: Column(
@@ -30,13 +60,34 @@ class SignIn extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           SafeArea(
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              width: double.infinity,
-              child: PrimaryButton(
-                title: "Sign in",
-                onPressed: () {},
-              ),
+            top: false,
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    final ss = widgetRef.read(googleSiginProvider);
+                    print(ss);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: UberColors.primary),
+                    ),
+                    padding: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.all(15),
+                    child: Center(child: UberText.button("Signin with Google")),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    title: "Sign In",
+                    onPressed: () async {},
+                  ),
+                ),
+              ],
             ),
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uber_mobile/utils/colors.dart';
+import 'package:uber_mobile/utils/typography.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({super.key, required this.title, required this.onPressed});
@@ -14,6 +15,7 @@ class PrimaryButton extends StatelessWidget {
           backgroundColor: MaterialStatePropertyAll(UberColors.primary),
           foregroundColor: const MaterialStatePropertyAll(Colors.white),
           padding: const MaterialStatePropertyAll(EdgeInsets.all(15)),
+          textStyle: MaterialStatePropertyAll(UberTypography.buttonStyle()),
           shape: MaterialStatePropertyAll(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
