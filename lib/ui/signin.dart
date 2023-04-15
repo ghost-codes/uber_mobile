@@ -1,42 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:uber_mobile/core/models/session.dart';
+import 'package:uber_mobile/core/providers/sessionManager.dart';
 import 'package:uber_mobile/ui/widgets/primaryButton.dart';
 import 'package:uber_mobile/utils/colors.dart';
 import 'package:uber_mobile/utils/typography.dart';
-
-final googleSiginProvider = FutureProvider<String?>((ref) async {
-  // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-  // Create a new credential
-  final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth?.accessToken,
-    idToken: googleAuth?.idToken,
-  );
-
-  // Once signed in, return the UserCredential
-  final user = await FirebaseAuth.instance.signInWithCredential(credential);
-
-  return user.credential?.accessToken;
-});
-
-final siginProvider = FutureProvider<Session?>((ref) async {
-  final googleSigin = ref.read(googleSiginProvider);
-
-  return Session(false);
-});
 
 class SignIn extends ConsumerWidget {
   const SignIn({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef widgetRef) {
+    final sessionManager = widgetRef.read(sessionProvider.notifier);
     return Scaffold(
       backgroundColor: UberColors.bgColor,
       body: Column(
@@ -65,8 +39,7 @@ class SignIn extends ConsumerWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    final ss = widgetRef.read(googleSiginProvider);
-                    print(ss);
+                    await sessionManager.googleSignIn();
                   },
                   child: Container(
                     width: double.infinity,

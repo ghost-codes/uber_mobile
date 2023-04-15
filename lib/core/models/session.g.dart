@@ -7,9 +7,9 @@ part of 'session.dart';
 // **************************************************************************
 
 Session _$SessionFromJson(Map<String, dynamic> json) => Session(
-      json['isSigupCompleted'] as bool,
+      json['isSignupComplete'] as bool,
     );
 
 Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
-      'isSigupCompleted': instance.isSigupCompleted,
+      'isSignupComplete': instance.isSignupComplete,
     };

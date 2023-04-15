@@ -4,9 +4,9 @@ part 'session.g.dart';
 
 @JsonSerializable()
 class Session {
-  final bool isSigupCompleted;
+  final bool isSignupComplete;
 
-  Session(this.isSigupCompleted);
+  Session(this.isSignupComplete);
 
   factory Session.fromJson(Map<String, dynamic> json) => _$SessionFromJson(json);
 

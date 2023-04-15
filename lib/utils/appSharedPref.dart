@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +11,6 @@ class AppSharedPref {
   Future<bool> setUser(String user) async => await _pref.setString("user", user);
   // Future<bool> setAccessToken(String token) async => await _pref.setString("accessToken", token);
   String? get accessToken {
-    log("Debug get Access Token ${_pref.getString("accessToken")}");
     return _pref.getString("accessToken");
   }
 

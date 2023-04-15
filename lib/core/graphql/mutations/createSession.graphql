@@ -1,0 +1,11 @@
+mutation ($tokenId: String!) {
+  createSession(tokenId: $tokenId) {
+    user {
+      id
+      phoneNumber
+      dateOfBirth
+      createdDate
+    }
+    isSignupComplete
+  }
+}

@@ -1,20 +1,52 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uber_mobile/core/providers/appstateManager.dart';
+import 'package:uber_mobile/core/services/serviceLocator.dart';
+import 'package:uber_mobile/firebase_options.dart';
 import 'package:uber_mobile/ui/signin.dart';
 import 'package:uber_mobile/utils/themeData.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  unawaited(runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await setupServices();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    //     systemNavigationBarColor: Colors.transparent));
+    // await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // await setupServices();
+    // await Firebase.initializeApp(
+    //   options: DefaultFirebaseOptions.currentPlatform,
+    // );
+    runApp(const ProviderScope(child: MyApp()));
+  }, ((error, stack) => print(error))));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appState = ref.watch(appStateProvider);
+    if (appState == AppState.Authenticated) {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: themeData,
+        home: const Center(
+          child: Text("Hello"),
+        ),
+      );
+    }
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: themeData,
       home: const SignIn(),
     );

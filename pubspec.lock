@@ -392,6 +392,21 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.0"
+  gql:
+    dependency: transitive
+    description:
+      name: gql
+      sha256: "60e808fb52bcb3e79a8f7f1078a518413fbb5991da27371f3719513ac0646043"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.1"
+  gql_codegen:
+    dependency: "direct main"
+    description:
+      path: "packages/gql_codegen"
+      relative: true
+    source: path
+    version: "1.0.0"
   graphs:
     dependency: transitive
     description:

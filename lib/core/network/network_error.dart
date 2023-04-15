@@ -34,6 +34,10 @@ class NetworkError implements Exception {
         message = 'Response timed out';
         break;
       case DioErrorType.unknown:
+        if (dioErr.response == null) {
+          message = dioErr.message;
+          break;
+        }
         final statusCode = dioErr.response!.statusCode!;
         if (statusCode >= 200 && statusCode < 400) {
           final response = dioErr.response?.data;

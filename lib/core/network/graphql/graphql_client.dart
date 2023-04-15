@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:uber_mobile/core/network/graphql/GraphqlRequest.dart';
+import 'package:uber_mobile/core/graphql/GraphqlRequest.dart';
 import 'package:uber_mobile/core/network/network_error.dart';
 
 import '../error.dart';
@@ -107,8 +107,8 @@ class GraphQLClientImpl extends GraphQLClient {
 
   Future<T?> _post<T>(Map<String, dynamic> body, {Dio? dio}) async {
     dio ??= _dioInstance;
-    log("${dio.options.headers}");
     try {
+      print(body);
       final result = await dio.post('', data: body);
       return result.data;
     } on DioError catch (e) {
