@@ -10,6 +10,26 @@ class UberText {
     );
   }
 
+  static Text header(String text, {Color color = Colors.white}) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: color,
+        fontSize: 50,
+      ),
+    );
+  }
+
+  static Text title(String text, {Color color = Colors.white}) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: color,
+        fontSize: 24,
+      ),
+    );
+  }
+
   static Text button(String text, {Color color = Colors.white}) {
     return Text(
       text,

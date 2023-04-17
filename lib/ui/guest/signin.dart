@@ -5,8 +5,8 @@ import 'package:uber_mobile/ui/widgets/primaryButton.dart';
 import 'package:uber_mobile/utils/colors.dart';
 import 'package:uber_mobile/utils/typography.dart';
 
-class SignIn extends ConsumerWidget {
-  const SignIn({super.key});
+class SignInPage extends ConsumerWidget {
+  const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef widgetRef) {
@@ -18,6 +18,7 @@ class SignIn extends ConsumerWidget {
         children: [
           Expanded(
             child: Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: UberColors.primary,
                 gradient: LinearGradient(
@@ -28,7 +29,25 @@ class SignIn extends ConsumerWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Column(children: [
+                  const SizedBox(height: 25),
+                  UberText.header("Uber"),
+                  UberText.title("Get there."),
+                  const SizedBox(height: 30),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Image.asset("assets/imgs/car.png"),
+                    ),
+                  )
+                ]),
               ),
             ),
           ),
@@ -40,6 +59,10 @@ class SignIn extends ConsumerWidget {
                 GestureDetector(
                   onTap: () async {
                     await sessionManager.googleSignIn();
+//                     if(sessionManager.state!=null){
+
+// context.go(GuestRoutes.userDetails);
+//                     }
                   },
                   child: Container(
                     width: double.infinity,
