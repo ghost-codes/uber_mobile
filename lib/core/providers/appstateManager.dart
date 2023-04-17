@@ -23,8 +23,8 @@ final appStateProvider = StateNotifierProvider((ref) {
   final seshProvider = ref.watch<Session?>(sessionProvider);
 
   final appStateManager = AppStateManager(AppState.Unauthenticated);
-  // if (seshProvider == null || !seshProvider.isSignupComplete) {
-  if (seshProvider?.isSignupComplete ?? true) {
+  if (seshProvider == null || !seshProvider.isSignupComplete) {
+    // if (seshProvider?.isSignupComplete ?? true) {
     appStateManager.update(AppState.Unauthenticated);
   } else {
     appStateManager.update(AppState.Authenticated);

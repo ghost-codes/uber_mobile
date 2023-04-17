@@ -4,6 +4,7 @@ import 'package:uber_mobile/core/providers/appstateManager.dart';
 import 'package:uber_mobile/core/providers/sessionManager.dart';
 import 'package:uber_mobile/router/guestRouter.dart';
 import 'package:uber_mobile/router/userRouter.dart';
+import 'package:uber_mobile/ui/guest/splashHost.dart';
 import 'package:uber_mobile/utils/themeData.dart';
 
 class App extends ConsumerStatefulWidget {
@@ -14,6 +15,7 @@ class App extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<App> {
+  bool initialized = false;
   @override
   void initState() {
     super.initState();
@@ -22,6 +24,20 @@ class _MyAppState extends ConsumerState<App> {
   @override
   Widget build(BuildContext context) {
     final appState = ref.watch(appStateProvider);
+    final session = ref.watch(sessionProvider.notifier);
+
+    if (!initialized) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashHost(
+          init: () async {
+            await session.initialize();
+            initialized = true;
+            setState(() {});
+          },
+        ),
+      );
+    }
 
     if (appState == AppState.Authenticated) {
       return const UserHost();

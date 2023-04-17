@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
                     return GoogleMap(
                       myLocationButtonEnabled: false,
                       myLocationEnabled: true,
+                      mapType: MapType.normal,
                       markers: {
                         Marker(
                           markerId: const MarkerId("asdfadsf"),

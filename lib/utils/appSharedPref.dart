@@ -17,6 +17,7 @@ class AppSharedPref {
   Map<String, dynamic>? get user {
     var result = _pref.getString("user");
     if (result == null) return null;
+
     return json.decode(result);
   }
 

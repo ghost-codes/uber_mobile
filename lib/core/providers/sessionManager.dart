@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,12 +9,20 @@ import 'package:uber_mobile/core/models/session.dart';
 import 'package:uber_mobile/core/network/graphql/graphql_client.dart';
 import 'package:uber_mobile/core/repository_mixin.dart';
 import 'package:uber_mobile/core/services/serviceLocator.dart';
+import 'package:uber_mobile/utils/appSharedPref.dart';
 
 class SessionManager extends StateNotifier<Session?> with RepositoryMixin {
   SessionManager(super.state);
   final gqlClient = sl<GraphQLClient>();
+  final sharedPref = sl<AppSharedPref>();
 
-  Future<void> initialize() async {}
+  Future<void> initialize() async {
+    final user = sharedPref.user;
+    if (user == null) return;
+
+    final session = Session.fromJson(user);
+    state = session;
+  }
 
   Future<void> updateSession(Session session) async {
     state = session;
@@ -25,7 +35,7 @@ class SessionManager extends StateNotifier<Session?> with RepositoryMixin {
   Future<void> authenticate(String tokenId) async {
     final result =
         await gqlClient.runMutation(CreateSessionRequest(tokenId), resultKey: "createSession");
-    print(result);
+    sharedPref.setUser(json.encode(result));
     final session = Session.fromJson(result!);
     updateSession(session);
   }
