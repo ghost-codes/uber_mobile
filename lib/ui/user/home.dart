@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               height: double.infinity,
               width: double.infinity,
-              color: UberColors.gray,
+              color: UberColors.offWhite,
               child: StreamBuilder(
                   stream: controller.stream,
                   initialData: _center,

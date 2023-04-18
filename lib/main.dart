@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uber_mobile/app.dart';
 import 'package:uber_mobile/core/services/serviceLocator.dart';
@@ -14,8 +15,12 @@ void main() {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //     systemNavigationBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+      ),
+    );
     // await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     runApp(const ProviderScope(child: App()));

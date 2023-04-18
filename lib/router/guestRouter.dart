@@ -27,7 +27,7 @@ final guestRouter = GoRouter(
     GoRoute(
       path: "/user_details",
       name: GuestRoutes.userDetails,
-      builder: (context, state) => const UserDetailsPage(),
+      builder: (context, state) => UserDetailsPage(),
     )
   ],
 );

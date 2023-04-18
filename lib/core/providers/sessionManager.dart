@@ -5,11 +5,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uber_mobile/core/error/failure.dart';
 import 'package:uber_mobile/core/graphql/mutations/createSession.g.dart';
+import 'package:uber_mobile/core/graphql/mutations/createUserMetaData.g.dart';
 import 'package:uber_mobile/core/models/session.dart';
+import 'package:uber_mobile/core/models/session.dart' as u;
 import 'package:uber_mobile/core/network/graphql/graphql_client.dart';
 import 'package:uber_mobile/core/repository_mixin.dart';
 import 'package:uber_mobile/core/services/serviceLocator.dart';
 import 'package:uber_mobile/utils/appSharedPref.dart';
+import 'package:uber_mobile/utils/extensions.dart';
+
+class CreateUserMetaDataViewModel extends StateNotifier<bool> {
+  DateTime? dateOfBirth;
+  String? phone;
+
+  CreateUserMetaDataViewModel(super.state);
+
+  bool get isReady => phone != null && dateOfBirth != null;
+
+  setDateTime(DateTime date) {
+    dateOfBirth = date;
+
+    state = isReady;
+  }
+
+  setPhone(String s) {
+    phone = s;
+    state = isReady;
+  }
+}
 
 class SessionManager extends StateNotifier<Session?> with RepositoryMixin {
   SessionManager(super.state);
@@ -32,11 +55,12 @@ class SessionManager extends StateNotifier<Session?> with RepositoryMixin {
     state = null;
   }
 
-  Future<void> authenticate(String tokenId) async {
+  Future<void> authenticate(String tokenId, u.User user) async {
     final result =
         await gqlClient.runMutation(CreateSessionRequest(tokenId), resultKey: "createSession");
-    sharedPref.setUser(json.encode(result));
     final session = Session.fromJson(result!);
+    session.user = user;
+    sharedPref.setUser(json.encode(session.toJson()));
     updateSession(session);
   }
 
@@ -60,7 +84,20 @@ class SessionManager extends StateNotifier<Session?> with RepositoryMixin {
       if (idToken == null) {
         throw OperationFailure(message: "Could not retreive id token");
       }
-      await authenticate(idToken);
+      sharedPref.setAccessToken(idToken);
+      final currentUser = u.User(user.user!.email!, user.user!.displayName!);
+      await authenticate(idToken, currentUser);
+    });
+  }
+
+  Future<void> createUserMetaData(CreateUserMetaDataViewModel model) async {
+    await runOperation(() async {
+      final idToken = sharedPref.accessToken;
+
+      final result = await gqlClient
+          .runMutation(CreateUserMetaDataRequest(model.phone, idToken, model.dateOfBirth!.json()));
+      state =
+          Session(state!.isSignupComplete, metadata: MetaData.fromJson(result!), user: state!.user);
     });
   }
 }

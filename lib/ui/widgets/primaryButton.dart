@@ -6,13 +6,14 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({super.key, required this.title, required this.onPressed});
 
   final String title;
-  final Function() onPressed;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return FilledButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(UberColors.primary),
+          backgroundColor:
+              MaterialStatePropertyAll(onPressed == null ? UberColors.gray : UberColors.primary),
           foregroundColor: const MaterialStatePropertyAll(Colors.white),
           padding: const MaterialStatePropertyAll(EdgeInsets.all(15)),
           textStyle: MaterialStatePropertyAll(UberTypography.buttonStyle()),

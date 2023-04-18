@@ -1,0 +1,18 @@
+mutation (
+  $phoneNumber: String!
+  $firebaseAuthId: String!
+  $dateOfBirth: Time!
+) {
+  createUser(
+    data: {
+      phoneNumber: $phoneNumber
+      firebaseAuthId: $firebaseAuthId
+      dateOfBirth: $dateOfBirth
+    }
+  ) {
+    id
+    phoneNumber
+    dateOfBirth
+    createdDate
+  }
+}
